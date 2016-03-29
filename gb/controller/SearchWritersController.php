@@ -41,19 +41,22 @@ class SearchWritersController extends PageController {
         return $mapper->getWritersByName($name);
     }
     
-    function searchWriterByNameAndDoB($name, $date_of_birth) {        
-        print "Search by Name + DoB. Please insert your code here!";
+    function searchWriterByNameAndDoB($name, $date_of_birth) {
         print "Name = " . $name . " - dob = " . $date_of_birth;
+        $mapper = new \gb\mapper\WriterMapper();
+        return $mapper->getWritersByNameAndDoB($name, $date_of_birth);
     }
     
     function searchWriterByNameAndDoBAndCountry($name, $date_of_birth, $country) {
-        print "Search by Name + DoB + Country. Please insert your code here!";
         print "Name = " . $name . " - dob = " . $date_of_birth . " - country = " . $country;
+        $mapper = new \gb\mapper\WriterMapper();
+        return $mapper->getWritersByNameAndDoBAndCountry($name, $date_of_birth, $country);
     }
     
     function listAllWriters() {
         print "List all writers.";
-        print "Please insert your code here!";
+        $mapper = new \gb\mapper\WriterMapper();
+        return $mapper->getAllWriters();
     }
     function getSearchResult() {
         return $this->writers;

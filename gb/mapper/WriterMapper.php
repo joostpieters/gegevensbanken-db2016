@@ -59,12 +59,38 @@ class WriterMapper extends Mapper {
     function selectAllStmt() {
         return $this->selectAllStmt;
     }
-    
+
     function getWritersByName ($name) {
         $con = $this->getConnectionManager();
-        $selectStmt = "SELECT a.*, b.* from person a, writer b where a.uri = b.writer_uri and a.full_name like " ."\"" . $name . "%" . "\"";        
-        $writers = $con->executeSelectStatement($selectStmt, array()); 
+        $selectStmt = "SELECT a.*, b.* from person a, writer b where a.uri = b.writer_uri and a.full_name like " ."\"" . $name . "%" . "\"";
+        $writers = $con->executeSelectStatement($selectStmt, array());
         #print $selectStmt;
+        return $this->getCollection($writers);
+    }
+
+    function getWritersByNameAndDoB ($name, $date_of_birth) {
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.*, b.* from person a, writer b where a.uri = b.writer_uri and a.full_name like " ."\"". "%" . $name . "%" . "\""
+                       ."and a.birth_date like " ."\"". "%" . $date_of_birth . "%" . "\"";
+        $writers = $con->executeSelectStatement($selectStmt, array());
+        #print $selectStmt;
+        return $this->getCollection($writers);
+    }
+
+    function getWritersByNameAndDoBAndCountry ($name, $date_of_birth, $country) {
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.*, b.* from person a, writer b, has_citizenship c where a.uri = b.writer_uri and a.uri = c.person_uri 
+                       and a.full_name like " ."\"". "%" . $name . "%" . "\""."and a.birth_date like " ."\"". "%" . $date_of_birth . "%" . "\""
+                       ."and c.country_iso_code = ". "\"" .$country . "\"";
+        $writers = $con->executeSelectStatement($selectStmt, array());
+        #print $selectStmt;
+        return $this->getCollection($writers);
+    }
+
+    function getAllWriters(){
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.*, b.* from person a, writer b where a.uri = b.writer_uri";
+        $writers = $con->executeSelectStatement($selectStmt, array());
         return $this->getCollection($writers);
     }
     
