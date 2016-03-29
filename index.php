@@ -9,6 +9,6 @@
 	require("template/top.tpl.php");
 ?>
 
-Today is ?<br />
-Group members: 
+Today is <?php echo Date("d/m/Y"); ?><br />
+Group members: Jean Frerot, Koen Geerts, Stijn Sallets
 
