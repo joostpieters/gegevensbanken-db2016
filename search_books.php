@@ -22,7 +22,7 @@ $allBookGenres = $bookGenreMapper->findAll();
         <tr>
             <td>Genre</td>            
             <td colspan="3" style="width: 85%">
-                <select style="width: 50%" name="country">
+                <select style="width: 50%" name="genre">
                     <option value="">--------Book genres ---------- </option>
                     <?php
                     foreach($allBookGenres as $bookGenre) {
@@ -45,14 +45,33 @@ $allBookGenres = $bookGenreMapper->findAll();
 </table>
 </form>
 
-
+<?php
+    $books = $bookController->getSearchResult();
+    print count($books) . " books found";
+    if (count($books) > 0) {
+?>
 <table style="width: 100%">
     <tr>
         <td>Book name</td>        
         <td>Awards</td>
         <td>Description</td>
-    </tr>    
+    </tr>
+    <?php
+        foreach($books as $book) {
+    ?>
+        <tr>
+            <td><?php echo $book->getName(); ?></td>
+            <td><?php echo $book->getNbAwards(); ?></td>
+            <td><?php echo $book->getDescription(); ?></td>
+
+        </tr>
+<?php
+        }
+?>
 </table>
+ <?php
+    }
+?>
 
 <?php
 	require("template/bottom.tpl.php");

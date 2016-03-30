@@ -2,14 +2,20 @@
 namespace gb\controller;
 
 require_once("gb/controller/PageController.php");
+require_once("gb/mapper/BookMapper.php" );
 
 
 class BookController extends PageController {
+    private $searchResult;
     private $selectedBookUri;
     
     function process() {
         if (isset($_POST["search"])) {
-            print "Please provide some piece of code here to search books by genres!";
+
+            if ((strlen($_POST["genre"]) > 0)){
+                $this->searchResult = $this->searchBooksByGenre($_POST["genre"]);
+            }
+
         }
         
         if (isset($_POST["update"])) {
@@ -34,6 +40,14 @@ class BookController extends PageController {
     
     function getSelectedBookUri() {
         return $this->selectedBookUri;
+    }
+
+    function searchBooksByGenre($genre){
+        $mapper = new \gb\mapper\BookMapper();
+        return $mapper->getBooksByGenre($genre);
+    }
+    function getSearchResult() {
+        return $this->searchResult;
     }
 }
 
