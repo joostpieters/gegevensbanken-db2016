@@ -4,9 +4,13 @@ $title = "Search books by genres";
 
 require("template/top.tpl.php");
 require_once("gb/controller/BookController.php");
+require_once("gb/mapper/BookGenreMapper.php");
 
 $bookController = new gb\controller\BookController();
 $bookController->process();
+
+$bookGenreMapper = new gb\mapper\BookGenreMapper();
+$allBookGenres = $bookGenreMapper->findAll();
  
 ?>    
 <form method="post">
@@ -19,7 +23,13 @@ $bookController->process();
             <td>Genre</td>            
             <td colspan="3" style="width: 85%">
                 <select style="width: 50%" name="country">
-                    <option value="">--------Book genres ---------- </option>                    
+                    <option value="">--------Book genres ---------- </option>
+                    <?php
+                    foreach($allBookGenres as $bookGenre) {
+                        echo "<option value=\"", $bookGenre->getUri(), "\">", $bookGenre->getGenreName(), "</option>" ;
+                    }
+
+                    ?>
                 </select>
             </td>          
         </tr>
