@@ -2,6 +2,7 @@
 namespace gb\domain;
 
 require_once( "gb/domain/DomainObject.php" );
+require_once("gb/mapper/BookMapper.php" );
 
 class Book extends DomainObject {
 
@@ -10,7 +11,6 @@ class Book extends DomainObject {
     private $description;
     private $original_language;
     private $first_publication_date;
-    private $nbAwards;
 
 
     function __construct( $id=null ) {
@@ -58,14 +58,15 @@ class Book extends DomainObject {
         return $this->first_publication_date;
     }
 
-    function setNbAwards($nb){
-        $this->nbAwards = $nb;
-    }
-
     function getNbAwards(){
-       return $this->nbAwards;
+        $mapper = new \gb\mapper\BookMapper();
+        return $mapper->getNbAwards($this->uri);
     }
 
+    function getNbChapters(){
+        $mapper = new \gb\mapper\BookMapper();
+        return $mapper->getNbChapters($this->uri);
+    }
 
 }
 

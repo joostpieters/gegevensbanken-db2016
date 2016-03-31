@@ -35,7 +35,6 @@ class BookMapper extends Mapper {
             $obj->setDescription($array['description']);
             $obj->setOriginalLanguage($array['original_language']);
             $obj->setFirstPublicationDate($array['first_publication_date']);
-            $obj->setNbAwards($this->getNbAwards($obj->getUri()));
         }
 
         return $obj;
@@ -76,6 +75,34 @@ class BookMapper extends Mapper {
         return count($awards);
     }
 
+    function getNbChapters ($uri){
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.* from chapter a where a.book_uri = " ."\"" . $uri .  "\"";
+        $awards = $con->executeSelectStatement($selectStmt, array());
+        return count($awards);
+    }
+
+    function bookHasChapterWithNumber($bookUri, $chapterNumber){
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.* from chapter a where a.book_uri = " ."\"" . $bookUri .  "\"" ."and a.chapter_number = "."\"" . $chapterNumber .  "\"";
+        $chapter = $con->executeSelectStatement($selectStmt, array());
+        if (count($chapter) == 1){
+            return true;
+        }
+        return false;
+    }
+
+    function insertChapter($bookUri, $chapterNumber, $text){
+        $con = $this->getConnectionManager();
+        $insertStmt = "INSERT INTO chapter (book_uri, chapter_number, text) VALUES (" ."\"" .$bookUri ."\", ". $chapterNumber .", \""  .$text."\" )";
+        return $con->executeInsertStatement($insertStmt, array());
+    }
+
+    function updateChapter($bookUri, $chapterNumber, $text){
+        $con = $this->getConnectionManager();
+        $updateStmt = "UPDATE chapter SET text =  \""  .$text."\" WHERE book_uri = \"" .$bookUri ."\" and chapter_number = \"" .$chapterNumber ."\"";
+        return $con->executeUpdateStatement($updateStmt, array());
+    }
 
 }
 

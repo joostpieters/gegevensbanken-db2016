@@ -1,8 +1,13 @@
 <?php
 	
 require_once("gb/controller/BookController.php");
+require_once("gb/controller/ChapterController.php");
 $bookController = new gb\controller\BookController();
 $bookController->process();
+
+$chapterController = new gb\controller\ChapterController();
+$chapterController->process();
+$chapters = $chapterController->getSearchResult();
 
 $title = "book_uri =" . $bookController->getSelectedBookUri();
 require("template/top.tpl.php");
@@ -16,14 +21,32 @@ require("template/top.tpl.php");
         <tr>
             <td>Chapter</td>            
             <td style="width: 85%">
-                <select style="width: 50%" name="chapter">
-                    <option value="1">--------Chapter ---------- </option>                    
-                </select>
+                <select style="width: 50%" name="chapter" onchange="this.form.submit()">
+                    <option value="not set">--------Chapter ---------- </option>
+                    <?php
+                    foreach($chapters as $chapter) {
+                        $select = "";
+                        if (isset($_POST["chapter"]) and $_POST["chapter"] == $chapter->getChapterNumber()){
+                            $select = " selected ";
+                        }
+                        echo "<option value=\"", $chapter->getChapterNumber(), "\"", $select, ">", $chapter->getChapterNumber(), "</option>" ;
+                    }
+
+                    ?>
+                </select>"
             </td>          
         </tr>
         <tr>
             <td>Old text:</td>
-            <td><textarea name="old_text" cols="60" rows="6"></textarea></td>
+            <td><textarea name="old_text" cols="60" rows="6"><?php
+                        if(isset($_POST["chapter"]) and $_POST["chapter"] != "not set"){
+                            echo $chapterController->getTextFromChapter($_POST["chapter"]);
+                        }
+                        else{
+                            echo "Please select a chapter.";
+                        }
+                    ?>
+                </textarea></td>
         </tr>
         <tr>
             <td>New text:</td>

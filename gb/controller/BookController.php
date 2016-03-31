@@ -19,11 +19,11 @@ class BookController extends PageController {
         }
         
         if (isset($_POST["update"])) {
-            $this->updateBookChapter();
+            $this->updateBookChapter($_GET["book_uri"], $_POST["chapter"], $_POST["new_text"]);
         }
         
         if (isset($_POST["add_chapter"])) {
-            $this->addBookChapter();
+            $this->addBookChapter($_GET["book_uri"], $_POST["chapter_number"], $_POST["new_text"]);
         }
         
         if (isset($_GET["book_uri"])) {
@@ -31,11 +31,27 @@ class BookController extends PageController {
         }
     }
     
-    function updateBookChapter() {
-        print "Please provide some piece of code to update the book chapter here!";
+    function updateBookChapter($bookUri, $chapterNumber, $text) {
+        $mapper = new \gb\mapper\BookMapper();
+        if($mapper->updateChapter($bookUri, $chapterNumber, $text) == 1){
+            echo "Chapter updated!";
+        }
+        else {
+            print "Something went wrong!";
+        }
     }
-    function addBookChapter() {
-        print "Please provide some piece of code to add a new chapter for the selected books here!";
+    
+    function addBookChapter($bookUri, $chapterNumber, $text) {
+        $mapper = new \gb\mapper\BookMapper();
+        if(!$mapper->bookHasChapterWithNumber($bookUri, $chapterNumber)) {
+            $result = $mapper->insertChapter($bookUri, $chapterNumber, $text);
+            if (!$result) {
+                echo "Chapter NOT added";
+            }
+        }
+        else{
+            echo "This chapter number already exists!";
+        }
     }
     
     function getSelectedBookUri() {
@@ -46,6 +62,7 @@ class BookController extends PageController {
         $mapper = new \gb\mapper\BookMapper();
         return $mapper->getBooksByGenre($genre);
     }
+
     function getSearchResult() {
         return $this->searchResult;
     }
