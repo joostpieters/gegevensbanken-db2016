@@ -10,22 +10,7 @@ require("template/top.tpl.php");
 <tr>
     <td colspan="4">
     <table style="width: 100%">        
-        <tr>
-            <td>Genre</td>            
-            <td colspan="3" style="width: 85%">
-                <select style="width: 50%" name="country">
-                    <option value="">--------Book genres ---------- </option>                    
-                </select>
-            </td>          
-        </tr>
-        <tr>
-            <td>Writer country</td>            
-            <td colspan="3" style="width: 85%">
-                <select style="width: 50%" name="country">
-                    <option value="">--------Country ---------- </option>                    
-                </select>
-            </td>          
-        </tr>
+     
          <tr>
             <td>From time</td>
             <td><input type="text" name ="from_time"   ></td>
@@ -47,8 +32,9 @@ require("template/top.tpl.php");
 
 <table style="width: 100%">
     <tr>
-        <td>Book name</td>
-        <td>Description</td>        
+        <td>Country name</td>
+        <td>Genre name</td> 
+        <td>Total number of books</td>
     </tr>    
 </table>
 
