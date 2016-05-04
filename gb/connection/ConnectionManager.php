@@ -16,7 +16,7 @@ class ConnectionManager {
     protected function prepareSQLStatement ($selectString) {
         return self::$PDO->prepare($selectString);
     }
-           
+    
     function executeSelectStatement ($selectString, $paras) {                
         $stmt = $this->prepareSQLStatement ($selectString);
         $stmt->execute ($paras);        

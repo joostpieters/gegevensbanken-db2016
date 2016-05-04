@@ -17,12 +17,12 @@ session_start(); 		// -- session_start() op deze plek is niet erg netjes, maar v
 <h2 class="indexTitle">Index</h2>
 <ul>
 	<li><a href="index.php">Home</a></li>
-        <li><a href="search_writers.php">Search writers</a></li>
-        <li><a href="search_books.php">Search books</a></li>
+	<li><a href="search_writers.php">Search writers</a></li>
+    <li><a href="search_books.php">Search books</a></li>
 	<li><a href="list_book_chapters.php">Update chapters</a></li>
-        <li><a href="list_spouses.php">Writer spouses</a></li>
-        <li><a href="list_books_win_awards.php">Books & awards</a></li>
-        
+    <li><a href="list_spouses.php">Writer spouses</a></li>
+    <li><a href="list_books_win_awards.php">Books & awards</a></li>
+	<li><a href="top_10_writers.php">Search top 10 writers by genre</a></li>
         
 	
 </ul>
