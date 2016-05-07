@@ -89,7 +89,7 @@ class WriterMapper extends Mapper {
 
     function getWritersTop10ByGenre ($genre) {
         $con = $this->getConnectionManager();
-        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a, award b Where (book_uri, b.uri) IN (SELECT book_uri, award_uri FROM wins_award WHERE genre_uri=$genre) GROUP BY a.writer_uri ORDER BY COUNT(*) DESC";
+        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a, award b Where (book_uri, b.uri) IN (SELECT book_uri, award_uri FROM wins_award WHERE genre_uri=\"".$genre."\") GROUP BY a.writer_uri ORDER BY COUNT(*) DESC";
         $writers = $con->executeSelectStatement($selectStmt, array());
         #print $selectStmt;
         return $this->getCollection($writers);

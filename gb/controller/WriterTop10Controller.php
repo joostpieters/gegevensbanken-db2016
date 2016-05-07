@@ -9,7 +9,7 @@
 namespace gb\controller;
 
 require_once("gb/controller/PageController.php");
-require_once("gb/mapper/WriterMapper.php" );
+require_once("gb/mapper/WriterTop10Mapper.php" );
 
 class WriterTop10Controller extends PageController {
     private $writers;
@@ -23,7 +23,7 @@ class WriterTop10Controller extends PageController {
     function searchTop10ByGenre($genre)
     {
         print "Genre = " . $genre;
-        $mapper = new \gb\mapper\WriterMapper();
+        $mapper = new \gb\mapper\WriterTop10Mapper();
         return $mapper->getWritersTop10ByGenre($genre);
     }
 
