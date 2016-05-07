@@ -14,7 +14,7 @@ class WriterTop10 extends DomainObject {
     }
     
     function setUri($uri) {
-        $this->writer = $uri;
+        $this->uri = $uri;
     }
 
     function getUri() {
