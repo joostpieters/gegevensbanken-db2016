@@ -26,14 +26,11 @@ class WriterTop10Mapper extends Mapper {
         $returner = array();
 
         foreach($raw as $row) {
-            if (count($writerTop10 < 10)) {
-                $writerTop10[key($row)] = $row;
-                arsort($writerTop10);
-            } elseif (count($writerTop10) > $writerTop10[9]) {
+            while (count($writerTop10) >= 10){
                 array_pop($writerTop10);
-                $writerTop10[key($row)] = $row;
-                arsort($writerTop10);
             }
+            $writerTop10[key($row)] = $row;
+            arsort($writerTop10);
         }
 
         foreach($writerTop10 as $writer) {
