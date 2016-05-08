@@ -63,6 +63,11 @@ class BookController extends PageController {
         return $mapper->getBooksByGenre($genre);
     }
 
+    function searchBookFromTimeWithAwardInGenreAndWriterFromCountry($minDate, $maxDate, $genre, $country){
+        $mapper = new \gb\mapper\BookMapper();
+        return $mapper->searchBookFromTimeWithAwardInGenreAndWriterFromCountry($minDate, $maxDate, $genre, $country);
+    }
+
     function getSearchResult() {
         return $this->searchResult;
     }

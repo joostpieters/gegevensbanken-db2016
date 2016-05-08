@@ -58,6 +58,13 @@ class BookGenreMapper extends Mapper {
         return $this->selectAllStmt;
     }
 
+    function findGenresFromCountry($country){
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.* from genre a WHERE a.uri IN (SELECT a.genre_uri FROM has_genre a WHERE a.book_uri IN (SELECT a.book_uri FROM writes a WHERE a.writer_uri IN (SELECT a.person_uri FROM has_citizenship a WHERE a.country_iso_code = \"".$country."\")))";
+        $genres = $con->executeSelectStatement($selectStmt, array());
+        return $this->getCollection($genres);
+    }
+
 }
 
 

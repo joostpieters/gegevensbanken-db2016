@@ -3,7 +3,7 @@ namespace gb\mapper;
 
 $EG_DISABLE_INCLUDES=true;
 require_once( "gb/mapper/Mapper.php" );
-require_once( "gb/domain/WriterTop10.php" );
+require_once("gb/mapper/WriterMapper.php" );
 
 
 class WriterTop10Mapper extends Mapper {
@@ -16,52 +16,22 @@ class WriterTop10Mapper extends Mapper {
 
     function getCollection( array $raw ) {
 
-//        $writerCollection = array();
-//        foreach($raw as $row) {
-//            array_push($writerCollection, $this->doCreateObject($row));
-//        }
-//        return $writerCollection;
-
-        $writerTop10 = array();
-        $returner = array();
-
-        foreach($raw as $row) {
-            if (count($writerTop10 < 10)) {
-                $writerTop10[key($row)] = $row;
-                arsort($writerTop10);
-            } elseif (count($writerTop10) > $writerTop10[9]) {
-                array_pop($writerTop10);
-                $writerTop10[key($row)] = $row;
-                arsort($writerTop10);
-            }
+        $writerTop10Collection = array();
+        for($i=0; $i<10 && $i<count($raw); $i++){
+            array_push($writerTop10Collection, $this->doCreateObject($raw[$i]));
         }
 
-        foreach($writerTop10 as $writer) {
-            array_push($returner, $this->doCreateObject([key($writer), $writer]));
-        }
-
-        return $returner;
+        return $writerTop10Collection;
     }
-    
-//    function addWriter($writer_uri, $count) {
-//        if (count($this->writerTop10) < 10) {
-//            $this->writerTop10[$writer_uri] = $count;
-//            arsort($this->writerTop10);
-//        } elseif ($count > $this->writerTop10[9]) {
-//            array_pop($this->writerTop10);
-//            $this->writerTop10[$writer_uri] = $count;
-//            arsort($this->writerTop10);
-//        }
-//    }
 
     protected function doCreateObject( array $array ) {
 
         $obj = null;
         if (count($array) > 0) {
-            $obj = new \gb\domain\WriterTop10( $array[0] );
+            $writerMapper = new \gb\mapper\WriterMapper();
+            $obj = $writerMapper->getWriterByUri($array['writer_uri'])[0];
 
-            $obj->setUri($array[0]);
-            $obj->setCount(count($array[1])); //--------------------------------------- hier is iets grondig fout...
+            $obj->setRank($array['COUNT(*)']);
         }
 
         return $obj;
@@ -87,19 +57,25 @@ class WriterTop10Mapper extends Mapper {
         return $this->selectAllStmt;
     }
 
-    function getWritersTop10ByGenre ($genre) {
+    function getWritersTop10ByGenreAndNbAwards ($genre) {
         $con = $this->getConnectionManager();
-        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a, award b Where (book_uri, b.uri) 
+        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a, award b Where (a.book_uri, b.uri) 
                         IN (SELECT book_uri, award_uri FROM wins_award WHERE genre_uri=\"".$genre."\") 
                           GROUP BY a.writer_uri ORDER BY COUNT(*) DESC";
         $writers = $con->executeSelectStatement($selectStmt, array());
-        #print $selectStmt;
         return $this->getCollection($writers);
     }
 
-    function getAllWriters(){
+    function getWritersTop10ByGenreAndNbAwardsFromCountry($genre, $country){
         $con = $this->getConnectionManager();
-        $selectStmt = "SELECT a.*, b.* from person a, writer b where a.uri = b.writer_uri";
+        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a, award b Where (a.book_uri, b.uri) IN (SELECT book_uri, award_uri FROM wins_award WHERE genre_uri=\"".$genre."\") AND a.writer_uri IN (SELECT person_uri FROM has_citizenship WHERE country_iso_code=\"".$country."\") GROUP BY a.writer_uri ORDER BY COUNT(*) DESC";
+        $writers = $con->executeSelectStatement($selectStmt, array());
+        return $this->getCollection($writers);
+    }
+
+    function getWriterTop10TotalBooksWritten(){
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a GROUP BY a.writer_uri ORDER BY COUNT(*) DESC";
         $writers = $con->executeSelectStatement($selectStmt, array());
         return $this->getCollection($writers);
     }
