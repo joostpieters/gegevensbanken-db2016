@@ -4,15 +4,11 @@ $title = "Search writers";
 
 require("template/top.tpl.php");
 require_once("gb/controller/WriterTop10Controller.php");
-require_once("gb/controller/BookController.php");
 require_once("gb/domain/Writer.php");
 require_once("gb/mapper/BookGenreMapper.php");
 require_once("gb/mapper/CountryMapper.php");
 
 $WriterTop10Controller = new gb\controller\WriterTop10Controller();
-
-$bookController = new gb\controller\BookController();
-$bookController->process();
 
 $bookGenreMapper = new gb\mapper\BookGenreMapper();
 $allBookGenres = $bookGenreMapper->findAll();
