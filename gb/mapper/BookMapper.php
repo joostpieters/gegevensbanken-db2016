@@ -103,6 +103,19 @@ class BookMapper extends Mapper {
         $updateStmt = "UPDATE chapter SET text =  \""  .$text."\" WHERE book_uri = \"" .$bookUri ."\" and chapter_number = \"" .$chapterNumber ."\"";
         return $con->executeUpdateStatement($updateStmt, array());
     }
+    
+    function searchBookFromTimeWithAwardInGenreAndWriterFromCountry($minDate, $maxDate, $genre, $country){
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.* FROM book a WHERE a.first_publication_date BETWEEN \"".$minDate."\" AND \"".$maxDate."\" AND
+                       a.uri IN (SELECT book_uri FROM wins_award WHERE genre_uri = \"".$genre."\") AND
+                       a.uri IN (SELECT book_uri FROM writes
+                            WHERE writer_uri IN (SELECT writer_uri FROM writer
+                                    WHERE writer_uri IN (SELECT writer_uri FROM has_citizenship
+                                        WHERE country_iso_code = \"".$country."\")))";
+        $books = $con->executeSelectStatement($selectStmt, array());
+        #print $selectStmt;
+        return $this->getCollection($books);
+    }
 
 }
 

@@ -53,6 +53,11 @@ class SearchWritersController extends PageController {
         return $mapper->getWritersByNameAndDoBAndCountry($name, $date_of_birth, $country);
     }
     
+    function getWriterByUri($uri){
+        $mapper = new \gb\mapper\WriterMapper();
+        return $mapper->getWriterByUri($uri);
+    }
+    
     function listAllWriters() {
         print "List all writers.";
         $mapper = new \gb\mapper\WriterMapper();

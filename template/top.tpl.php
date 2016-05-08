@@ -3,6 +3,7 @@
 // implementeren.
 session_start(); 		// -- session_start() op deze plek is niet erg netjes, maar voldoet voor dit practicum
 ?>
+<!--<?//xml version="1.0" encoding="utf-8"?>-->
 <?= '<' . '?xml version="1.0" encoding="utf-8"?' . '>' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="nl-BE" lang="nl-BE">
@@ -17,12 +18,12 @@ session_start(); 		// -- session_start() op deze plek is niet erg netjes, maar v
 <h2 class="indexTitle">Index</h2>
 <ul>
 	<li><a href="index.php">Home</a></li>
-        <li><a href="search_writers.php">Search writers</a></li>
-        <li><a href="search_books.php">Search books</a></li>
+	<li><a href="search_writers.php">Search writers</a></li>
+    <li><a href="search_books.php">Search books</a></li>
 	<li><a href="list_book_chapters.php">Update chapters</a></li>
-        <li><a href="list_spouses.php">Writer spouses</a></li>
-        <li><a href="list_books_win_awards.php">Books & awards</a></li>
-        
+    <li><a href="list_spouses.php">Writer spouses</a></li>
+    <li><a href="list_books_win_awards.php">Books & awards</a></li>
+	<li><a href="top_10_writers.php">Search top 10 writers by genre</a></li>
         
 	
 </ul>

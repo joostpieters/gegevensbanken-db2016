@@ -47,12 +47,20 @@ class Writer extends DomainObject {
         return $this->birth_date;
     }
     
-    function setDateofDeath( $date_of_death) {
+    function setDateOfDeath( $date_of_death) {
         $this->death_date = $date_of_death;
     }
     
     function getDateOfDeath() {
         return $this->death_date;
+    }
+
+    function setRank($rank){
+        $this->rank = $rank;
+    }
+
+    function getRank(){
+        return $this->rank;
     }
 
 }

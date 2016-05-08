@@ -6,8 +6,6 @@ require("template/top.tpl.php");
 require_once("gb/controller/WriterTop10Controller.php");
 require_once("gb/controller/BookController.php");
 require_once("gb/domain/Writer.php");
-require_once("gb/domain/WriterTop10.php");
-require_once("gb/mapper/CountryMapper.php");
 require_once("gb/mapper/BookGenreMapper.php");
 
 $WriterTop10Controller = new gb\controller\WriterTop10Controller();
@@ -54,7 +52,7 @@ $allBookGenres = $bookGenreMapper->findAll();
 
 <?php
 $writerTop10 = $WriterTop10Controller->getSearchResult();
-print count($writerTop10) . " writers found";
+print count($writerTop10) . " writers found <br />";
 if (count($writerTop10) > 0) {
     ?>
     <table style="width: 100%">
@@ -70,8 +68,8 @@ if (count($writerTop10) > 0) {
         foreach($writerTop10 as $writer) {
             ?>
             <tr>
-                <td><?php echo $writer->getUri(); ?></td>
-                <td><?php echo $writer->getCount(); ?></td>
+                <td><?php echo $writer->getFullName(); ?></td>
+                <td><?php echo $writer->getRank(); ?></td>
             </tr>
             <?php
         }
@@ -80,7 +78,7 @@ if (count($writerTop10) > 0) {
     <?php
 }
 ?>
-
+<br />click <a href="helper.php">here</a> to generate a book-wins-award-in-genre-written-by combination
 <?php
 require("template/bottom.tpl.php");
 ?>

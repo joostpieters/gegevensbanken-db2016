@@ -57,6 +57,13 @@ class CountryMapper extends Mapper {
     function selectAllStmt() {
         return $this->selectAllStmt;
     }
+
+    function findCountrysThatHaveAnAward(){
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.* FROM country a WHERE a.iso_code IN (SELECT a.country_iso_code from award a WHERE a.country_iso_code IS NOT NULL GROUP BY a.country_iso_code) ORDER BY a.iso_code";
+        $countrys = $con->executeSelectStatement($selectStmt, array());
+        return $this->getCollection($countrys);
+    }
     
 }
 

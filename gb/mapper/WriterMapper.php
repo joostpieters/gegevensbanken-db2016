@@ -93,6 +93,12 @@ class WriterMapper extends Mapper {
         $writers = $con->executeSelectStatement($selectStmt, array());
         return $this->getCollection($writers);
     }
+
+    function getWriterByUri($uri){
+        $con = $this->getConnectionManager();
+        $writers = $con->executeSelectStatement($this->selectStmt(), [$uri]);
+        return $this->getCollection($writers);
+    }
     
 
 }
