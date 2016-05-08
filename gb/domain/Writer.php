@@ -56,6 +56,10 @@ class Writer extends DomainObject {
         return $this->death_date;
     }
 
+    /**
+     * By introducing this variable, we can use the domain Writer.php
+     * instead of creating a new domain solely for WriterTop10.
+     */
     function setRank($rank){
         $this->rank = $rank;
     }
