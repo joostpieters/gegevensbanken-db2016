@@ -6,12 +6,16 @@ require("template/top.tpl.php");
 require_once("gb/mapper/BookGenreMapper.php");
 require_once("gb/mapper/WriterMapper.php");
 require_once("gb/connection/ConnectionManager.php");
+require_once("gb/mapper/CountryMapper.php");
 
 $bookGenreMapper = new gb\mapper\BookGenreMapper();
 $allBookGenres = $bookGenreMapper->findAll();
 
 $writerMapper = new gb\mapper\WriterMapper();
 $allWriters = $writerMapper->findAll();
+
+$countryMapper = new gb\mapper\CountryMapper();
+$allCountries = $countryMapper->findAll();
 
 function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -45,8 +49,9 @@ if (!isset($_POST["insert"])) {
                                 </select>
                             </td>
                         </tr>
+                        
                         <tr>
-                            <td>Genre</td>
+                            <td>Writer</td>
                             <td colspan="3" style="width: 85%">
                                 <select style="width: 50%" name="writer">
                                     <option value="">--------Writers ----------</option>
@@ -76,7 +81,31 @@ if (!isset($_POST["insert"])) {
                             </td>
                             <td><input type="text" name="award_name"  value="<?php echo generateRandomString(10);?>"></td>
                         </tr>
+                        <tr><td></td><td>Fill this in to creae a new writer: </td></tr>
+                            <tr>
+                                <td colspan="3" style="width: 85%">
+                                    <select style="width: 50%" name="country">
+                                        <option value="">--------Select country ---------- </option>
+                                        <?php
+                                        foreach($allCountries as $country) {
+                                            echo "<option value=\"", $country->getIsoCode(), "\">", $country->getCountryName(), "</option>" ;
+                                        }
+                                        
+                                        ?>      
+                                    </select>
+                                </td>    
+                            </tr>
                         <tr>
+                        <tr>
+                            <td>writer name</td>
+                            </td>
+                            <td><input type="text" name="writer_name"  value="<?php echo generateRandomString(10);?>"></td>
+                        </tr>
+                        <tr>
+                            <td>writer uri</td>
+                            </td>
+                            <td><input type="text" name="writer_uri"  value="<?php echo generateRandomString(10);?>"></td>
+                        </tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td><input type="submit" name="insert" value="Insert"></td>
@@ -91,20 +120,35 @@ if (!isset($_POST["insert"])) {
     <?php
 }
 else{
-    if($_POST["genre"] != "" && $_POST["writer"] != "" && $_POST["book_uri"] != "" && $_POST["book_name"] != "" && $_POST["award_uri"] != "" && $_POST["award_name"] != ""){
+    if($_POST["genre"] != "" && ($_POST["writer"] || ($_POST["writer"] == "" && isset($_POST["country"]) && isset($_POST["writer_name"]) && isset($_POST["writer_uri"])) ) != "" && $_POST["book_uri"] != "" && $_POST["book_name"] != "" && $_POST["award_uri"] != "" && $_POST["award_name"] != ""){
         echo "start insertion...<br />";
+        $writer_uri = $_POST["writer"];
         $con = new \gb\connection\ConnectionManager();
+
+        if($_POST["writer"] == "" && isset($_POST["country"]) && isset($_POST["writer_name"]) && isset($_POST["writer_uri"])){
+            $statement6 = "INSERT INTO person (uri, full_name) VALUES (\"".$_POST["writer_uri"]."\", \"".$_POST["writer_name"]."\")";
+            $statement7 = "INSERT INTO writer (writer_uri) VALUES (\"".$_POST["writer_uri"]."\")";
+            $statement8 = "INSERT INTO has_citizenship (person_uri, country_iso_code) VALUES (\"".$_POST["writer_uri"]."\", \"".$_POST["country"]."\")";
+
+            $writer_uri = $_POST["writer_uri"];
+        }
         $statement1 = "INSERT INTO book (uri, name) VALUES (\"".$_POST["book_uri"]."\", \"".$_POST["book_name"]."\")";
         $statement2 = "INSERT INTO has_genre (genre_uri, book_uri) VALUES (\"".$_POST["genre"]."\", \"".$_POST["book_uri"]."\")";
-        $statement3 = "INSERT INTO writes (writer_uri, book_uri) VALUES (\"".$_POST["writer"]."\", \"".$_POST["book_uri"]."\")";
+        $statement3 = "INSERT INTO writes (writer_uri, book_uri) VALUES (\"".$writer_uri."\", \"".$_POST["book_uri"]."\")";
         $statement4 = "INSERT INTO award (uri, name) VALUES (\"".$_POST["award_uri"]."\",\"".$_POST["award_name"]."\")";
         $statement5 = "INSERT INTO wins_award (book_uri, genre_uri, award_uri) VALUES (\"".$_POST["book_uri"]."\", \"".$_POST["genre"]."\", \"".$_POST["award_uri"]."\")";
 
         $con->executeInsertStatement($statement1, array());
         $con->executeInsertStatement($statement2, array());
-        $con->executeInsertStatement($statement3, array());
         $con->executeInsertStatement($statement4, array());
         $con->executeInsertStatement($statement5, array());
+        if($_POST["writer"] == "" && isset($_POST["country"]) && isset($_POST["writer_name"]) && isset($_POST["writer_uri"])){
+            echo "Create writer";
+            $con->executeInsertStatement($statement6, array());
+            $con->executeInsertStatement($statement8, array());
+            $con->executeInsertStatement($statement7, array());
+        }
+        $con->executeInsertStatement($statement3, array());
 
         echo "Insertion done!  <a href='helper.php'>do again...</a>";
 

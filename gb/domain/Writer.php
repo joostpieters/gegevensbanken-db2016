@@ -10,6 +10,7 @@ class Writer extends DomainObject {
     private $birth_date;
     private $death_date;
     private $description;
+    private $rank;
    
     function __construct( $id=null ) {
         //$this->name = $name;

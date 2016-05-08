@@ -57,19 +57,25 @@ class WriterTop10Mapper extends Mapper {
         return $this->selectAllStmt;
     }
 
-    function getWritersTop10ByGenre ($genre) {
+    function getWritersTop10ByGenreAndNbAwards ($genre) {
         $con = $this->getConnectionManager();
-        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a, award b Where (book_uri, b.uri) 
+        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a, award b Where (a.book_uri, b.uri) 
                         IN (SELECT book_uri, award_uri FROM wins_award WHERE genre_uri=\"".$genre."\") 
                           GROUP BY a.writer_uri ORDER BY COUNT(*) DESC";
         $writers = $con->executeSelectStatement($selectStmt, array());
-        #print $selectStmt;
         return $this->getCollection($writers);
     }
 
-    function getAllWriters(){
+    function getWritersTop10ByGenreAndNbAwardsFromCountry($genre, $country){
         $con = $this->getConnectionManager();
-        $selectStmt = "SELECT a.*, b.* from person a, writer b where a.uri = b.writer_uri";
+        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a, award b Where (a.book_uri, b.uri) IN (SELECT book_uri, award_uri FROM wins_award WHERE genre_uri=\"".$genre."\") AND a.writer_uri IN (SELECT person_uri FROM has_citizenship WHERE country_iso_code=\"".$country."\") GROUP BY a.writer_uri ORDER BY COUNT(*) DESC";
+        $writers = $con->executeSelectStatement($selectStmt, array());
+        return $this->getCollection($writers);
+    }
+
+    function getWriterTop10TotalBooksWritten(){
+        $con = $this->getConnectionManager();
+        $selectStmt = "SELECT a.writer_uri, COUNT(*) FROM writes a GROUP BY a.writer_uri ORDER BY COUNT(*) DESC";
         $writers = $con->executeSelectStatement($selectStmt, array());
         return $this->getCollection($writers);
     }
